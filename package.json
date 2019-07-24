@@ -23,12 +23,12 @@
   "main": "./index.js",
   "types": "./index.d.ts",
   "dependencies": {
-    "@atomist/automation-client": "1.3.1-master.20190326043055",
-    "@atomist/sdm": "1.3.1-master.20190326042612",
-    "@atomist/sdm-core": "1.3.1-master.20190323165808"
+    "@atomist/automation-client": "^1.6.2",
+    "@atomist/sdm": "^1.6.1",
+    "@atomist/sdm-core": "^1.6.1"
   },
   "devDependencies": {
-    "@atomist/sdm-local": "1.0.6-master.20190327194706",
+    "@atomist/sdm-local": "^1.0.10",
     "@types/mocha": "^5.2.5",
     "@types/power-assert": "^1.5.0",
     "espower-typescript": "^9.0.0",
