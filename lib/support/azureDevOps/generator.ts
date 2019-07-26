@@ -5,8 +5,8 @@ import {GoalConfigurer} from "@atomist/sdm-core";
 import * as core from "azure-devops-node-api/CoreApi";
 import {TeamProjectReference} from "azure-devops-node-api/interfaces/CoreInterfaces";
 import {MyGoals} from "../../machine/goals";
+import {createAdoPipelines} from "./afterActions";
 import {triggerBuildRegistration} from "./build";
-import {createAdoBuildPipeline} from "./buildPipeline";
 import {connectToAdo} from "./connect";
 
 export interface AdoCreationParams {
@@ -55,7 +55,7 @@ export const adoIntegratedGenerator: GoalConfigurer<MyGoals> = async (sdm, goals
         transform: [],
         intent: "create dotnet",
         afterAction: [
-            createAdoBuildPipeline,
+            createAdoPipelines,
         ],
     });
 

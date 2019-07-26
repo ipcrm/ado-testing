@@ -1,5 +1,5 @@
 import {logger} from "@atomist/automation-client";
-import {ProjectAction, slackErrorMessage} from "@atomist/sdm";
+import {ProjectAction, slackErrorMessage, slackSuccessMessage} from "@atomist/sdm";
 import * as ba from "azure-devops-node-api/BuildApi";
 import {
     BuildAuthorizationScope,
@@ -8,6 +8,7 @@ import {
 } from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {connectToAdo} from "./connect";
 import {AdoCreationParams} from "./generator";
+import {createReleaseDefinition} from "./release";
 
 enum LabelSources {
     SuccessOnly = "6",
@@ -15,15 +16,7 @@ enum LabelSources {
     Never = "0",
 }
 
-export const createAdoBuildPipeline: ProjectAction<AdoCreationParams> = async (p, papi) => {
-    logger.debug(`Begin createAdoBuildPipeline`);
-    const project = papi.parameters.project.split(":");
-    const target = {
-        owner: (papi.parameters as any).target.owner,
-        repo: (papi.parameters as any).target.repo,
-    };
-    const repoSlug = `${target.owner}/${target.repo}`;
-
+export const createAdoBuildPipeline = async (repoSlug: string, adoProjectName: string, adoProjectId: string) => {
     const connection = await connectToAdo();
     const build: ba.IBuildApi = await connection.getBuildApi();
 
@@ -96,19 +89,16 @@ export const createAdoBuildPipeline: ProjectAction<AdoCreationParams> = async (p
         checkoutSubmodules: false,
     };
     // TODO: Convert this to a lookup based on prompt from generator
-    newDef.project = {id: project[1]}; /* TeamProject Reference requires an id, not string */
+    newDef.project = {id: adoProjectId}; /* TeamProject Reference requires an id, not string */
     logger.debug(`Definition to be created, ${JSON.stringify(newDef)}`);
     try {
-        await build.createDefinition(newDef, project[0]);
+        const newBuildDef = await build.createDefinition(newDef, adoProjectName);
         logger.debug(`Successfully created new build definition ${newDef.name}!`);
+        return newBuildDef;
     } catch (e) {
         const msg = `Failed to create new build definition ${newDef.name}, error => ${JSON.stringify(e)}`;
         logger.error(msg);
-        await papi.addressChannels(slackErrorMessage(
-            `Failed to create build definintion`,
-            msg,
-            papi.context,
-        ));
+        throw e;
     }
 
 };

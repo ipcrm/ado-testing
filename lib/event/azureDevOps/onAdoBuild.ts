@@ -40,15 +40,15 @@ export const onAdoBuild: EventHandlerRegistration<GetAdoBuild.Subscription> = {
 };
 
 function parseBuildStatus(status: string): "started" | "failed" | "error" | "passed" | "canceled" {
-    if (status === "none") {
+    if (status === "None") {
         return "failed";
-    } else if (status === "partiallysucceeded") {
+    } else if (status === "PartiallySucceeded") {
         return "failed";
-    } else if (status === "succeeded") {
+    } else if (status === "Succeeded") {
         return "passed";
-    } else if (status === "failed") {
+    } else if (status === "Failed") {
         return "failed";
-    } else if (status === "canceled") {
+    } else if (status === "Canceled") {
         return "canceled";
     }
 

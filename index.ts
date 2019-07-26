@@ -18,11 +18,13 @@ import {configure} from "@atomist/sdm-core";
 import {MyGoalCreator, MyGoals} from "./lib/machine/goals";
 import {adoIntegratedBuilds} from "./lib/support/azureDevOps/build";
 import {adoIntegratedGenerator} from "./lib/support/azureDevOps/generator";
+import {adoIntegratedRelease} from "./lib/support/azureDevOps/release";
 
 export const configuration: Configuration = configure<MyGoals>(async sdm => {
     const setGoals = await sdm.createGoals(MyGoalCreator, [
         adoIntegratedGenerator,
         adoIntegratedBuilds,
+        adoIntegratedRelease,
     ]);
 
     return {
