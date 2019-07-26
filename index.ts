@@ -1,5 +1,5 @@
 /*
- * Copyright © 2018 Atomist, Inc.
+ * Copyright © 2019 Atomist, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,41 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import {Configuration, logger} from "@atomist/automation-client";
+import {configure} from "@atomist/sdm-core";
+import {MyGoalCreator, MyGoals} from "./lib/machine/goals";
+import {adoIntegratedBuilds} from "./lib/support/azureDevOps/build";
+import {adoIntegratedGenerator} from "./lib/support/azureDevOps/generator";
 
-import { Configuration } from "@atomist/automation-client";
-import {
-    ConfigureOptions,
-    configureSdm,
-} from "@atomist/sdm-core";
-import { machine } from "./lib/machine/machine";
+export const configuration: Configuration = configure<MyGoals>(async sdm => {
+    const setGoals = await sdm.createGoals(MyGoalCreator, [
+        adoIntegratedGenerator,
+        adoIntegratedBuilds,
+    ]);
 
-const machineOptions: ConfigureOptions = {
-    /**
-     * When your SDM requires configuration that is unique to it,
-     * you can list it here.
-     */
-    requiredConfigurationValues: [
-    ],
-};
-
-/**
- * The starting point for building an SDM is here!
- */
-export const configuration: Configuration = {
-    /**
-     * To run in team mode, you'll need an Atomist workspace.
-     * To run in local mode, you don't. This will be ignored.
-     * See: https://docs.atomist.com/developer/architecture/#connect-your-sdm
-     */
-    workspaceIds: ["connect this SDM to your whole team with the Atomist service"],
-    postProcessors: [
+    return {
         /**
-         * This is important setup! This defines the function that will be called
-         * to configure your SDM with everything that you want it to do.
-         *
-         * Click into the first argument (the "machine" function) to personalize
-         * your SDM.
+         * GoalSet Definitions
          */
-        configureSdm(machine, machineOptions),
+        build: {
+            goals: [
+                [setGoals.triggerBuild, setGoals.build],
+            ],
+        },
+    };
+}, {
+    requiredConfigurationValues: [],
+    postProcessors: [
     ],
-};
+});

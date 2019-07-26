@@ -25,7 +25,10 @@
   "dependencies": {
     "@atomist/automation-client": "^1.6.2",
     "@atomist/sdm": "^1.6.1",
-    "@atomist/sdm-core": "^1.6.1"
+    "@atomist/sdm-core": "^1.6.1",
+    "@atomist/sdm-pack-build": "^1.0.5",
+    "azure-devops-node-api": "^9.0.1",
+    "lodash": "^4.17.15"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.0.10",
