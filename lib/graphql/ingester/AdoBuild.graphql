@@ -1,0 +1,20 @@
+type AdoBuild @rootType {
+    id: String!
+    eventType: String!
+    publisherId: String!
+    resource: AdoBuildResource!
+    resourceContainers: AdoResourceContainers!
+}
+type AdoBuildResource {
+    url: String!
+    id: Int!
+}
+type AdoResourceContainers  {
+    collection: AdoResourceContainer!
+    account: AdoResourceContainer!
+    project: AdoResourceContainer!
+}
+type AdoResourceContainer {
+    id: String!
+    baseUrl: String!
+}

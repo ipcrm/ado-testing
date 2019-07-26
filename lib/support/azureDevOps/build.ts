@@ -1,9 +1,10 @@
-import {logger} from "@atomist/automation-client";
+import {GraphQL, logger} from "@atomist/automation-client";
 import {CommandHandlerRegistration, ExecuteGoal, ParametersDefinition, slackErrorMessage} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
 import * as ba from "azure-devops-node-api/BuildApi";
 import {Build, BuildDefinitionReference} from "azure-devops-node-api/interfaces/BuildInterfaces";
 import * as _ from "lodash";
+import {onAdoBuild} from "../../event/azureDevOps/onAdoBuild";
 import {MyGoals} from "../../machine/goals";
 import {connectToAdo} from "./connect";
 import {getAdoProjects} from "./generator";
@@ -109,6 +110,8 @@ export const triggerBuildGoal: ExecuteGoal = async gi => {
 };
 
 export const adoIntegratedBuilds: GoalConfigurer<MyGoals> = async (sdm, goals) => {
+    sdm.addIngester(GraphQL.ingester({ name: "AdoBuild" }));
+    sdm.addEvent(onAdoBuild);
     goals.triggerBuild.with({
         name: "triggerAdoBuild",
         goalExecutor: triggerBuildGoal,

@@ -1,0 +1,17 @@
+subscription GetAdoBuild {
+    AdoBuild {
+        id
+        eventType
+        publisherId
+        resource {
+            id
+            url
+        }
+        resourceContainers {
+            project {
+                id
+                baseUrl
+            }
+        }
+    }
+}
