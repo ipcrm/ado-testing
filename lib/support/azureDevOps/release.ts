@@ -1,4 +1,4 @@
-import {logger} from "@atomist/automation-client";
+import {GraphQL, logger} from "@atomist/automation-client";
 import {GoalConfigurer} from "@atomist/sdm-core";
 import {BuildDefinition} from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {ReleaseDefinition, ReleaseDefinitionEnvironment} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
@@ -119,4 +119,5 @@ export const adoIntegratedRelease: GoalConfigurer<MyGoals> = async (sdm, goals) 
             logger.debug(JSON.stringify(await getReleasePlans("testproject"), undefined, 2));
         },
     });
+    sdm.addIngester(GraphQL.ingester({ name: "AdoReleaseDeploymentEvent" }));
 };

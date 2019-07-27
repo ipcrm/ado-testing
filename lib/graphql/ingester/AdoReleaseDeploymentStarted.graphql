@@ -1,0 +1,53 @@
+type AdoReleaseDeploymentEvent @rootType {
+    id: String!
+    eventType: String!
+    publisherId: String!
+    scope: String!
+    resource: AdoReleaseDeploymentResource
+}
+type AdoReleaseDeploymentResource {
+    environment: AdoReleaseDeploymentEnvironment!
+    project: AdoReleaseDeploymentEnvProject!
+    approval: AdoReleaseDeploymentApproval
+}
+type AdoReleaseDeploymentEnvironment {
+    id: Int!
+    releaseId: Int!
+    name: String!
+    status: String!
+    release: AdoReleaseDeploymentReleaseDefinition!
+}
+type AdoReleaseDeploymentRelease {
+    id: Int!
+    name: String!
+    url: String!
+}
+type AdoReleaseDeploymentReleaseDefinition {
+    id: Int!
+    name: String!
+    url: String!
+}
+type AdoReleaseDeploymentEnvProject {
+    id: String!
+    name: String!
+}
+type AdoReleaseEnvironment {
+    id: Int!
+    name: String!
+}
+type AdoReleaseDeploymentApproval {
+    id: Int!
+    revision: Int!
+    approver: AdoReleaseDeploymentApprover!
+    approvedBy: AdoReleaseDeploymentApprover!
+    approvalType: String!
+    status: String!
+    release: AdoReleaseDeploymentRelease!
+    releaseDefinition: AdoReleaseDeploymentReleaseDefinition!
+    releaseEnvironment: AdoReleaseEnvironment
+
+}
+type AdoReleaseDeploymentApprover {
+    id: String!
+    displayName: String!
+}
