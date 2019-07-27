@@ -22,7 +22,7 @@ export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, pa
         );
 
         await papi.addressChannels(slackSuccessMessage(
-            `Created New Azure DevOps Pipelines`,
+            `Created Azure DevOps Pipelines`,
             `Created release pipeline ${newReleaseDef.name} and build pipeline ${newBuildDef.name}`,
         ));
     } catch (e) {
