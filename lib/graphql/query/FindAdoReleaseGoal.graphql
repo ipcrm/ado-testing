@@ -1,0 +1,22 @@
+query FindAdoReleaseGoal($name: String!, $sha: String!) {
+    SdmGoal(uniqueName: [$name], sha: [$sha]) {
+        name
+        uniqueName
+        push {
+            after {
+                repo {
+                    name
+                    owner
+                }
+            }
+            branch
+            repo {
+                org {
+                    scmProvider {
+                        providerId
+                    }
+                }
+            }
+        }
+    }
+}

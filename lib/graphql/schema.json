@@ -42264,6 +42264,22 @@
             "deprecationReason": null
           },
           {
+            "name": "message",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AdoReleaseDeploymentMessage",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
             "name": "publisherId",
             "description": null,
             "args": [],
@@ -42284,15 +42300,46 @@
             "description": null,
             "args": [],
             "type": {
-              "kind": "OBJECT",
-              "name": "AdoReleaseDeploymentResource",
-              "ofType": null
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AdoReleaseDeploymentResource",
+                "ofType": null
+              }
             },
             "isDeprecated": false,
             "deprecationReason": null
           },
           {
             "name": "scope",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "NON_NULL",
+              "name": null,
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              }
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
+        "name": "AdoReleaseDeploymentMessage",
+        "description": null,
+        "fields": [
+          {
+            "name": "markdown",
             "description": null,
             "args": [],
             "type": {

@@ -36,6 +36,12 @@ export const configuration: Configuration = configure<MyGoals>(async sdm => {
                 [setGoals.triggerBuild, setGoals.build],
             ],
         },
+        release: {
+            goals: [
+                setGoals.releaseGoal,
+            ],
+            dependsOn: "build",
+        },
     };
 }, {
     requiredConfigurationValues: [],

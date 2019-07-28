@@ -1,0 +1,52 @@
+subscription OnAdoDeploymentEvent {
+    AdoReleaseDeploymentEvent {
+        id
+        eventType
+        publisherId
+        scope
+        resource {
+            approval {
+                approvalType
+                id
+                revision
+                status
+                approvedBy {
+                    displayName
+                    id
+                }
+                approver {
+                    displayName
+                    id
+                }
+                release {
+                    id
+                    name
+                }
+                releaseDefinition {
+                    id
+                    name
+                    url
+                }
+                releaseEnvironment {
+                    id
+                    name
+                }
+            }
+            project {
+                id
+                name
+            }
+            environment {
+                id
+                release {
+                    url
+                    name
+                    id
+                }
+            }
+        }
+        message {
+            markdown
+        }
+    }
+}

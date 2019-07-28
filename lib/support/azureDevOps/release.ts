@@ -1,9 +1,12 @@
 import {GraphQL, logger} from "@atomist/automation-client";
+import {Fulfillment, GoalWithFulfillment, IndependentOfEnvironment} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
 import {BuildDefinition} from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {ReleaseDefinition, ReleaseDefinitionEnvironment} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
 import {IReleaseApi} from "azure-devops-node-api/ReleaseApi";
+import {onAdoDeploymentEvent} from "../../event/azureDevOps/onAdoDeploymentEvent";
 import {MyGoals} from "../../machine/goals";
+import {SdmGoalState} from "../../typings/types";
 import {connectToAdo} from "./connect";
 
 export const getReleasePlans = async (adoProject: string): Promise<ReleaseDefinition> => {
@@ -120,4 +123,22 @@ export const adoIntegratedRelease: GoalConfigurer<MyGoals> = async (sdm, goals) 
         },
     });
     sdm.addIngester(GraphQL.ingester({ name: "AdoReleaseDeploymentEvent" }));
+    sdm.addEvent(onAdoDeploymentEvent(goals.releaseGoal));
+    goals.releaseGoal.with(AdoReleaseFulfillment);
 };
+
+const AdoReleaseFulfillment: Fulfillment = {
+    name: "adoReleaseGoalfulfilment",
+    goalExecutor: async gi => {
+        return {
+            state: SdmGoalState.in_process,
+            description: "Azure Devops Deployment | Pending...",
+        };
+    },
+};
+
+export function createReleaseUrl(project: string, releaseId: number): string {
+    // TODO: Move this to config
+    const org = `https://dev.azure.com/mcadorette`;
+    return `${org}/${project}/_releaseProgress?_a=release-pipeline-progress&releaseId=${releaseId}`;
+}

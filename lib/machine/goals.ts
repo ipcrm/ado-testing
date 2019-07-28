@@ -10,6 +10,10 @@ export const MyGoalCreator: GoalCreator<MyGoals> = async () => {
                 uniqueName: `triggerAdoBuild`,
             }),
             build: new Build(),
+            releaseGoal: new GoalWithFulfillment({
+                displayName: `Azure DevOps Release`,
+                uniqueName: `AdoRelease`,
+            }),
 
         };
         return goals;
@@ -19,4 +23,5 @@ export interface MyGoals extends AllGoals {
     autofix: Autofix;
     build: Build;
     triggerBuild: GoalWithFulfillment;
+    releaseGoal: GoalWithFulfillment;
 }

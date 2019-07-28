@@ -3,7 +3,12 @@ type AdoReleaseDeploymentEvent @rootType {
     eventType: String!
     publisherId: String!
     scope: String!
-    resource: AdoReleaseDeploymentResource
+    resource: AdoReleaseDeploymentResource!
+    message: AdoReleaseDeploymentMessage!
+
+}
+type AdoReleaseDeploymentMessage {
+    markdown: String!
 }
 type AdoReleaseDeploymentResource {
     environment: AdoReleaseDeploymentEnvironment!
