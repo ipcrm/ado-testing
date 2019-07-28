@@ -15,7 +15,7 @@ export interface AdoCreationParams {
 
 export const AdoCreationParamsDefinition: ParametersDefinition<AdoCreationParams> = {
     project: {
-        description: "Please select a project",
+        description: "Please select an Azure DevOps project",
         required: false,
     },
 };
@@ -40,23 +40,25 @@ export const adoIntegratedGenerator: GoalConfigurer<MyGoals> = async (sdm, goals
             const params = await (pi as any as CommandListenerInvocation<any>)
                 .promptFor<{ project: string }>({
                     project: {
-                        description: "Please select a project",
-                        type: { options: projectValues},
+                        description: "Please select an Azure DevOps project",
+                        type: {options: projectValues},
                     },
-                });
+                },
+            );
 
             pi.parameters.project = params.project;
 
             return GitCommandGitProject.cloned(
                 pi.credentials,
-                GitHubRepoRef.from({owner: "atomist-seeds", repo: "dotnet-core-service"}),
+                GitHubRepoRef.from({owner: "atomist-seeds", repo: "spring-rest"}),
                 { depth: 1 });
         },
         transform: [],
-        intent: "create dotnet",
+        intent: "create ado spring",
         afterAction: [
             createAdoPipelines,
         ],
+        autoSubmit: true,
     });
 
 };

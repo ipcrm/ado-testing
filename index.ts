@@ -19,22 +19,31 @@ import {MyGoalCreator, MyGoals} from "./lib/machine/goals";
 import {adoIntegratedBuilds} from "./lib/support/azureDevOps/build";
 import {adoIntegratedGenerator} from "./lib/support/azureDevOps/generator";
 import {adoIntegratedRelease} from "./lib/support/azureDevOps/release";
+import {ExtPacksConfigurator} from "./lib/support/extPacks";
 
 export const configuration: Configuration = configure<MyGoals>(async sdm => {
     const setGoals = await sdm.createGoals(MyGoalCreator, [
         adoIntegratedGenerator,
         adoIntegratedBuilds,
         adoIntegratedRelease,
+        ExtPacksConfigurator,
     ]);
 
     return {
         /**
          * GoalSet Definitions
          */
+        check: {
+            goals: [
+                setGoals.autofix,
+                setGoals.codeInspection,
+            ],
+        },
         build: {
             goals: [
                 [setGoals.triggerBuild, setGoals.build],
             ],
+            dependsOn: "check",
         },
         release: {
             goals: [

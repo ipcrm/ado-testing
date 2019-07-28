@@ -50,6 +50,12 @@ export function createBuildUrl(project: string, buildId: number): string {
     return `${org}/${project}/_build/results?buildId=${buildId}`;
 }
 
+export function createBuildDefinitionUrl(project: string, defId: number): string {
+    // TODO: Move this to config
+    const org = `https://dev.azure.com/mcadorette`;
+    return `${org}/${project}/_build?definitionId=${defId}`;
+}
+
 export const triggerBuildRegistration: CommandHandlerRegistration<TriggerBuildI> = {
     name: "triggerAdoBuild",
     parameters: triggerBuildDef,

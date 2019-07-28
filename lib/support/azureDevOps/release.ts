@@ -79,9 +79,6 @@ export const createReleaseDefinition = async (
                     ],
                 },
             ],
-            deploymentInput: {
-                queueId: 10,
-            },
         } as ReleaseDefinitionEnvironment as any,
     ];
 
@@ -102,7 +99,7 @@ export const createReleaseDefinition = async (
     ];
     newDef.triggers = [
         {
-            triggerType: 1,
+            triggerType: "artifactSource",
             artifactAlias: `_${buildDefinition.project.name}-${buildDefinition.name}`,
         } as any,
     ];
@@ -132,7 +129,7 @@ const AdoReleaseFulfillment: Fulfillment = {
     goalExecutor: async gi => {
         return {
             state: SdmGoalState.in_process,
-            description: "Azure Devops Deployment | Pending...",
+            description: "Planned: Azure DevOps Deployment",
         };
     },
 };
@@ -142,3 +139,9 @@ export function createReleaseUrl(project: string, releaseId: number): string {
     const org = `https://dev.azure.com/mcadorette`;
     return `${org}/${project}/_releaseProgress?_a=release-pipeline-progress&releaseId=${releaseId}`;
 }
+export function createReleaseDefinitionUrl(project: string, defId: number): string {
+    // TODO: Move this to config
+    const org = `https://dev.azure.com/mcadorette`;
+    return `${org}/${project}/_releaseDefinition?definitionId=${defId}&_a=environments-editor-preview`;
+}
+

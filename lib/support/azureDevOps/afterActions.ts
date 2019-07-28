@@ -1,8 +1,10 @@
 import {logger} from "@atomist/automation-client";
-import {ProjectAction, slackErrorMessage, slackSuccessMessage} from "@atomist/sdm";
+import {ProjectAction, slackErrorMessage, slackInfoMessage, slackSuccessMessage} from "@atomist/sdm";
+import * as slack from "@atomist/slack-messages";
+import {createBuildDefinitionUrl} from "./build";
 import {createAdoBuildPipeline} from "./buildPipeline";
 import {AdoCreationParams} from "./generator";
-import {createReleaseDefinition} from "./release";
+import {createReleaseDefinition, createReleaseDefinitionUrl, createReleaseUrl} from "./release";
 
 export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, papi) => {
     logger.debug(`Begin createAdoBuildPipeline`);
@@ -21,12 +23,25 @@ export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, pa
             newBuildDef,
         );
 
+        const buildUrl = createBuildDefinitionUrl(newBuildDef.project.id, newBuildDef.id);
+        const releaseUrl = createReleaseDefinitionUrl(
+            newReleaseDef.artifacts[0].definitionReference.project.id,
+            newReleaseDef.id,
+        );
+
         await papi.addressChannels(slackSuccessMessage(
             `Created Azure DevOps Pipelines`,
-            `Created release pipeline ${newReleaseDef.name} and build pipeline ${newBuildDef.name}`,
+            `Created release pipeline ${slack.url(releaseUrl, newReleaseDef.name)}`
+            + ` and build pipeline ${slack.url(buildUrl, newBuildDef.name)}`,
+        ));
+
+        await papi.addressChannels(slackInfoMessage(
+            `Azure DevOps: Next Steps!`,
+            `You need to set the agent pool for your deployment pipeline.  You can navigate to the new pipeline definition `
+            + `${slack.url(releaseUrl, "here")}`,
         ));
     } catch (e) {
-        const msg = `Failed to create Azure DevOps Pipelines, error found ${JSON.stringify(e, undefined, 2)}`
+        const msg = `Failed to create Azure DevOps Pipelines, error found ${JSON.stringify(e, undefined, 2)}`;
         await papi.addressChannels(slackErrorMessage(
             `Failed to create Azure DevOps Pipelines`,
             msg,
