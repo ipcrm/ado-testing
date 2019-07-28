@@ -1,5 +1,5 @@
-import {GraphQL, logger} from "@atomist/automation-client";
-import {Fulfillment, GoalWithFulfillment, IndependentOfEnvironment} from "@atomist/sdm";
+import {configurationValue, GraphQL, logger} from "@atomist/automation-client";
+import {Fulfillment} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
 import {BuildDefinition} from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {ReleaseDefinition, ReleaseDefinitionEnvironment} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
@@ -135,13 +135,10 @@ const AdoReleaseFulfillment: Fulfillment = {
 };
 
 export function createReleaseUrl(project: string, releaseId: number): string {
-    // TODO: Move this to config
-    const org = `https://dev.azure.com/mcadorette`;
+    const org = `${configurationValue("sdm.ado.baseUrl")}/${configurationValue("sdm.ado.org")}`;
     return `${org}/${project}/_releaseProgress?_a=release-pipeline-progress&releaseId=${releaseId}`;
 }
 export function createReleaseDefinitionUrl(project: string, defId: number): string {
-    // TODO: Move this to config
-    const org = `https://dev.azure.com/mcadorette`;
+    const org = `${configurationValue("sdm.ado.baseUrl")}/${configurationValue("sdm.ado.org")}`;
     return `${org}/${project}/_releaseDefinition?definitionId=${defId}&_a=environments-editor-preview`;
 }
-

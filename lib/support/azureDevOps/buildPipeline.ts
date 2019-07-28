@@ -1,5 +1,4 @@
-import {logger} from "@atomist/automation-client";
-import {ProjectAction, slackErrorMessage, slackSuccessMessage} from "@atomist/sdm";
+import {configurationValue, logger} from "@atomist/automation-client";
 import * as ba from "azure-devops-node-api/BuildApi";
 import {
     BuildAuthorizationScope,
@@ -7,8 +6,6 @@ import {
     DesignerProcess,
 } from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {connectToAdo} from "./connect";
-import {AdoCreationParams} from "./generator";
-import {createReleaseDefinition} from "./release";
 
 enum LabelSources {
     SuccessOnly = "6",
@@ -66,8 +63,7 @@ export const createAdoBuildPipeline = async (repoSlug: string, adoProjectName: s
     newDef.repository = {
         /* From what I've found, properties are undocumented.  You have to set them in the UI and read them back in the API to determine values */
         properties: {
-            // TODO: Make this a parameter to set the connection service ID
-            connectedServiceId: "0a9ccea2-7e92-4ba6-be42-cb46198287fb", /* This tells the pipeline how to authenticate with the external repo */
+            connectedServiceId: configurationValue("sdm.ado.ghServiceId"),
             fetchDepth: "2", /* 0 is full clone, any positive number is how deep the shallow clone should be */
             defaultBranch: "master",
             /**
@@ -88,7 +84,6 @@ export const createAdoBuildPipeline = async (repoSlug: string, adoProjectName: s
         clean: "true",
         checkoutSubmodules: false,
     };
-    // TODO: Convert this to a lookup based on prompt from generator
     newDef.project = {id: adoProjectId}; /* TeamProject Reference requires an id, not string */
     logger.debug(`Definition to be created, ${JSON.stringify(newDef)}`);
     try {

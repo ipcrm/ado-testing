@@ -1,4 +1,4 @@
-import {GraphQL, logger} from "@atomist/automation-client";
+import {configurationValue, GraphQL, logger} from "@atomist/automation-client";
 import {CommandHandlerRegistration, ExecuteGoal, ParametersDefinition, slackErrorMessage} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
 import * as ba from "azure-devops-node-api/BuildApi";
@@ -45,14 +45,12 @@ const triggerBuild = async (owner: string, repo: string, adoProject: string): Pr
 };
 
 export function createBuildUrl(project: string, buildId: number): string {
-    // TODO: Move this to config
-    const org = `https://dev.azure.com/mcadorette`;
+    const org = `${configurationValue("sdm.ado.baseUrl")}/${configurationValue("sdm.ado.org")}`;
     return `${org}/${project}/_build/results?buildId=${buildId}`;
 }
 
 export function createBuildDefinitionUrl(project: string, defId: number): string {
-    // TODO: Move this to config
-    const org = `https://dev.azure.com/mcadorette`;
+    const org = `${configurationValue("sdm.ado.baseUrl")}/${configurationValue("sdm.ado.org")}`;
     return `${org}/${project}/_build?definitionId=${defId}`;
 }
 

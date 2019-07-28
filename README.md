@@ -2,8 +2,24 @@
   <img src="https://images.atomist.com/sdm/SDM-Logo-Dark.png">
 </p>
 
-# @atomist-seeds/empty-sdm
+# @ipcrm/ado-example-sdm
 
+## Required Configuration:
+```json
+{
+  ...
+  "sdm": {
+    "ado": {
+      "baseUrl": "https://dev.azure.com",
+      "org": "<yourorg>",
+      "ghServiceId": "<your gh service connection id>",
+      "token": "<your access token>"
+    },
+  }
+}
+```
+
+# General
 [![atomist sdm goals](http://badge.atomist.com/T29E48P34/atomist-seeds/empty-sdm/c796f715-67c3-48ae-8b7c-45c0fd31443f)](https://app.atomist.com/workspace/T29E48P34)
 [![npm version](https://img.shields.io/npm/v/@atomist-seeds/empty-sdm.svg)](https://www.npmjs.com/package/@atomist-seeds/empty-sdm)
 
