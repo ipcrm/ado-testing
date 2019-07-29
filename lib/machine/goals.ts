@@ -14,6 +14,7 @@ export const MyGoalCreator: GoalCreator<MyGoals> = async () => {
             releaseGoal: new GoalWithFulfillment({
                 displayName: `Azure DevOps Release`,
                 uniqueName: `AdoRelease`,
+                preApprovalRequired: true,
             }),
 
         };

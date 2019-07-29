@@ -1,13 +1,13 @@
 import {configurationValue, GraphQL, HttpClientFactory, HttpMethod, logger} from "@atomist/automation-client";
 import {Fulfillment} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
-import axios from "axios";
 import {BuildDefinition} from "azure-devops-node-api/interfaces/BuildInterfaces";
 import {
     ReleaseDefinition,
     ReleaseDefinitionEnvironment,
 } from "azure-devops-node-api/interfaces/ReleaseInterfaces";
 import {IReleaseApi} from "azure-devops-node-api/ReleaseApi";
+import * as request from "request-promise-native";
 import {onAdoDeploymentEvent} from "../../event/azureDevOps/onAdoDeploymentEvent";
 import {MyGoals} from "../../machine/goals";
 import {SdmGoalState} from "../../typings/types";
@@ -90,13 +90,15 @@ const AdoReleaseFulfillment: Fulfillment = {
 
         for (const e of thisRelease.environments.map(env => env.id)) {
             // tslint:disable-next-line
-            const patchUrl = `https://vsrm.dev.azure.com/${configurationValue("sdm.ado.org")}/${adoInfo.projectName}/_apis/Release/releases/${thisRelease.id}/environments/${e}`;
-            await axios.patch(patchUrl,
-            {
-                status: "inProgress",
-                scheduledDeploymentTime: "null",
-                comment: "null",
-            }, {
+            const patchUrl = `https://vsrm.dev.azure.com/${configurationValue("sdm.ado.org")}/${adoInfo.projectName}/_apis/Release/releases/${thisRelease.id}/environments/${e}?api-version=5.0-preview`;
+            await request.patch(patchUrl,
+                {
+                    body: {
+                        status: "inProgress",
+                        scheduledDeploymentTime: "null",
+                        comment: "null",
+                    },
+                    json: true,
                     headers: {
                         Authorization: "Basic " + new Buffer("PAT:" + configurationValue("sdm.ado.token")).toString("base64"),
                         Accept: "application/json",
