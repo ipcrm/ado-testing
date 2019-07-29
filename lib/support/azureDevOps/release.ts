@@ -100,7 +100,7 @@ const AdoReleaseFulfillment: Fulfillment = {
                     },
                     json: true,
                     headers: {
-                        Authorization: "Basic " + new Buffer("PAT:" + configurationValue("sdm.ado.token")).toString("base64"),
+                        Authorization: "Basic " + Buffer.from("PAT:" + configurationValue("sdm.ado.token")).toString("base64"),
                         Accept: "application/json",
                     },
             });
