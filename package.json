@@ -29,8 +29,14 @@
     "@atomist/sdm-pack-build": "^1.0.5",
     "@atomist/sdm-pack-spring": "^2.0.0",
     "@atomist/slack-messages": "^1.1.1",
+    "@types/axios": "^0.14.0",
+    "@types/tunnel": "0.0.1",
+    "axios": "^0.19.0",
+    "axios-fetch": "^1.1.0",
     "azure-devops-node-api": "^9.0.1",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "tunnel": "0.0.6",
+    "ws": "^7.1.1"
   },
   "devDependencies": {
     "@atomist/sdm-local": "^1.0.10",

@@ -1,9 +1,10 @@
-import {GoalConfigurer} from "@atomist/sdm-core";
+import {GoalConfigurer, goalStateSupport} from "@atomist/sdm-core";
 import {springSupport} from "@atomist/sdm-pack-spring";
 import {MyGoals} from "../machine/goals";
 
 export const ExtPacksConfigurator: GoalConfigurer<MyGoals> = async (sdm, goals) => {
     sdm.addExtensionPacks(
+        goalStateSupport(),
         springSupport({
             review: {
                 springStyle: true,

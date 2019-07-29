@@ -1,12 +1,17 @@
-import {configurationValue, GraphQL, logger} from "@atomist/automation-client";
+import {configurationValue, GraphQL, HttpClientFactory, HttpMethod, logger} from "@atomist/automation-client";
 import {Fulfillment} from "@atomist/sdm";
 import {GoalConfigurer} from "@atomist/sdm-core";
+import axios from "axios";
 import {BuildDefinition} from "azure-devops-node-api/interfaces/BuildInterfaces";
-import {ReleaseDefinition, ReleaseDefinitionEnvironment} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
+import {
+    ReleaseDefinition,
+    ReleaseDefinitionEnvironment,
+} from "azure-devops-node-api/interfaces/ReleaseInterfaces";
 import {IReleaseApi} from "azure-devops-node-api/ReleaseApi";
 import {onAdoDeploymentEvent} from "../../event/azureDevOps/onAdoDeploymentEvent";
 import {MyGoals} from "../../machine/goals";
 import {SdmGoalState} from "../../typings/types";
+import {AdoDefinitionInfo} from "./afterActions";
 import {connectToAdo} from "./connect";
 
 export const getReleasePlans = async (adoProject: string): Promise<ReleaseDefinition> => {
@@ -76,9 +81,35 @@ export const adoIntegratedRelease: GoalConfigurer<MyGoals> = async (sdm, goals) 
 const AdoReleaseFulfillment: Fulfillment = {
     name: "adoReleaseGoalfulfilment",
     goalExecutor: async gi => {
+        const connection = await connectToAdo();
+        const releaseApiObject: IReleaseApi = await connection.getReleaseApi();
+        const adoInfo: AdoDefinitionInfo = JSON.parse(
+            await gi.preferences.get(`ado/${gi.goalEvent.repo.owner}/${gi.goalEvent.repo.name}/definitions`));
+        const releases = await releaseApiObject.getReleases(adoInfo.projectId, adoInfo.releaseId);
+        const thisRelease = await releaseApiObject.getRelease(adoInfo.projectId, releases[0].id);
+
+        for (const e of thisRelease.environments.map(env => env.id)) {
+            // tslint:disable-next-line
+            const patchUrl = `https://vsrm.dev.azure.com/${configurationValue("sdm.ado.org")}/${adoInfo.projectName}/_apis/Release/releases/${thisRelease.id}/environments/${e}`;
+            await axios.patch(patchUrl,
+            {
+                status: "inProgress",
+                scheduledDeploymentTime: "null",
+                comment: "null",
+            }, {
+                    headers: {
+                        Authorization: "Basic " + new Buffer("PAT:" + configurationValue("sdm.ado.token")).toString("base64"),
+                        Accept: "application/json",
+                    },
+            });
+        }
+
         return {
             state: SdmGoalState.in_process,
-            description: "Planned: Azure DevOps Deployment",
+            description: "Azure DevOps Deployment",
+            externalUrls: [
+                { label: thisRelease.name, url: createReleaseUrl(adoInfo.projectId, thisRelease.id)},
+            ],
         };
     },
 };

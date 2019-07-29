@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Configuration, logger} from "@atomist/automation-client";
+import {Configuration} from "@atomist/automation-client";
 import {configure} from "@atomist/sdm-core";
 import {MyGoalCreator, MyGoals} from "./lib/machine/goals";
 import {adoIntegratedBuilds} from "./lib/support/azureDevOps/build";

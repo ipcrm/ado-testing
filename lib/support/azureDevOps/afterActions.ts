@@ -8,6 +8,14 @@ import {createAdoBuildPipeline} from "./buildPipeline";
 import {AdoCreationParams} from "./generator";
 import {createReleaseDefinition, createReleaseDefinitionUrl} from "./release";
 
+export interface AdoDefinitionInfo {
+    projectId: string;
+    projectName: string;
+    buildId: number;
+    buildDefName: string;
+    releaseId: number;
+}
+
 export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, papi) => {
     logger.debug(`Begin createAdoBuildPipeline`);
     const project = papi.parameters.project.split(":");
@@ -39,6 +47,16 @@ export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, pa
             newReleaseDef.artifacts[0].definitionReference.project.id,
             newReleaseDef.id,
         );
+
+        // Store the project/release ID for this project
+        const data: AdoDefinitionInfo = {
+            projectId: newBuildDef.project.id,
+            buildId: newBuildDef.id,
+            releaseId: newReleaseDef.id,
+            projectName: newBuildDef.project.name,
+            buildDefName: newBuildDef.name,
+        };
+        await papi.preferences.put(`ado/${repoSlug}/definitions`, JSON.stringify(data));
 
         await papi.addressChannels(slackSuccessMessage(
             `Created Azure DevOps Pipelines`,
