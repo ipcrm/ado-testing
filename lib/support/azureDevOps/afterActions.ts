@@ -2,10 +2,11 @@ import {configurationValue, logger} from "@atomist/automation-client";
 import {ProjectAction, slackErrorMessage, slackInfoMessage, slackSuccessMessage} from "@atomist/sdm";
 import * as slack from "@atomist/slack-messages";
 import {mavenPipeline} from "../adoTemplates/maven";
+import {copyArtifact} from "../adoTemplates/releaseCopyArtifact";
 import {createBuildDefinitionUrl} from "./build";
 import {createAdoBuildPipeline} from "./buildPipeline";
 import {AdoCreationParams} from "./generator";
-import {createReleaseDefinition, createReleaseDefinitionUrl, createReleaseUrl} from "./release";
+import {createReleaseDefinition, createReleaseDefinitionUrl} from "./release";
 
 export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, papi) => {
     logger.debug(`Begin createAdoBuildPipeline`);
@@ -30,6 +31,7 @@ export const createAdoPipelines: ProjectAction<AdoCreationParams> = async (p, pa
             repoSlug,
             `Release pipeline for ${repoSlug}`,
             newBuildDef,
+            copyArtifact,
         );
 
         const buildUrl = createBuildDefinitionUrl(newBuildDef.project.id, newBuildDef.id);
