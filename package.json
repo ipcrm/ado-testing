@@ -31,7 +31,7 @@
     "@atomist/slack-messages": "^1.1.1",
     "azure-devops-node-api": "^9.0.1",
     "lodash": "^4.17.15",
-    "request-promise-native": "^1.0.7"
+    "request-promise-native": "^1.0.8"
   },
   "devDependencies": {
     "@types/request-promise-native": "^1.0.16",
