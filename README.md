@@ -15,8 +15,7 @@
       "ghServiceId": "<your gh service connection id>",
       "token": "<your access token>"
     },
-  }
-  
+  } 
 }
 
 
