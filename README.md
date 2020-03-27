@@ -13,6 +13,9 @@
       "baseUrl": "https://dev.azure.com",
       "org": "<yourorg>",
       "ghServiceId": "<your gh service connection id>",
+      
+      
+      
       "token": "<your access token>"
     },
   } 
