@@ -30,7 +30,7 @@
     "@atomist/sdm-pack-spring": "^2.0.0",
     "@atomist/slack-messages": "^1.1.1",
     "azure-devops-node-api": "^9.0.1",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "request-promise-native": "^1.0.7"
   },
   "devDependencies": {
